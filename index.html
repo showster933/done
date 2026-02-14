@@ -20,26 +20,40 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    background-image: url("pic.jpeg"); /* initial background */
-    background-size: auto 100vh;       /* fits height, keeps ratio */
+    background-image: url("pic.jpeg");
+    background-size: auto 100vh;
     background-position: center;
     background-repeat: no-repeat;
     transition: background-image 1.5s ease-in-out;
 }
 
+/* Container for everything */
 .container {
     position: relative;
     z-index: 10;
+    width: 90%;
     text-align: center;
+    transition: all 1s ease;
 }
 
-h1 {
+/* Question: initially centered */
+h1#questionHeading {
     color: white;
     font-size: 2em;
     text-shadow: 2px 2px 5px #ff4b5c;
+    margin: 0 0 20px 0;
+    transition: all 1s ease;
 }
 
+/* After YES: question moves to top center */
+.container.top h1#questionHeading {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Buttons */
 button {
     padding: 12px 25px;
     font-size: 18px;
@@ -65,21 +79,23 @@ button {
     position: absolute;
 }
 
+/* Love message: initially offscreen left */
 .message {
     display: none;
     font-size: 22px;
     color: white;
-    margin-top: 0;
-    position: absolute;  
-    top: 20px;
-    left: 20px;
     text-align: right;
-    animation: fadeIn 1.5s ease-in-out forwards;
+    max-width: 35%;
+    position: absolute;
+    top: 50%; 
+    left: -100%; /* start offscreen left */
+    transform: translateY(-50%);
+    transition: left 1s ease;
 }
 
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
+/* After YES: slide to right side */
+.message.visible {
+    left: 60%; /* fully visible on right side */
 }
 
 /* Floating hearts */
@@ -91,14 +107,8 @@ button {
 }
 
 @keyframes float {
-    from {
-        transform: translateY(100vh);
-        opacity: 1;
-    }
-    to {
-        transform: translateY(-10vh);
-        opacity: 0;
-    }
+    from { transform: translateY(100vh); opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
 }
 
 /* Overlay for smooth fade effect */
@@ -108,7 +118,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('pic2.jpeg'); /* new background */
+    background-image: url('pic2.jpeg');
     background-size: auto 100vh;
     background-position: center;
     background-repeat: no-repeat;
@@ -118,9 +128,14 @@ button {
     pointer-events: none;
 }
 
-/* Responsive font for mobile */
+/* Responsive adjustments */
 @media (max-width: 600px) {
     .message {
+        font-size: 18px;
+        max-width: 80%;
+        left: 10%; /* fully visible on mobile */
+    }
+    h1#questionHeading {
         font-size: 18px;
     }
 }
@@ -131,11 +146,16 @@ button {
 
 <div id="bgOverlay"></div>
 
-<div class="container">
-    <h1>Iniym adi ndaki povan thalparym ndo kunjaa? ❤️</h1>
+<div class="container" id="container">
+
+    <!-- Question initially centered -->
+    <h1 id="questionHeading">Iniym adi ndaki povan thalparym ndo kunjaa? ❤️</h1>
+
+    <!-- Buttons below question -->
     <button id="yesBtn">UND 🌝</button>
     <button id="noBtn">ILYAA 🤨</button>
 
+    <!-- Love message slides in from left after YES click -->
     <div class="message" id="loveMessage">
        ANAK VERE VAZHI ILLA MWOLE😉<br><br>
        INI SAHICHOO😏 <br>
@@ -150,8 +170,9 @@ const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const message = document.getElementById("loveMessage");
 const bgOverlay = document.getElementById("bgOverlay");
+const container = document.getElementById("container");
 
-// Make NO button run away
+// NO button runs away
 function moveButton() {
     const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
     const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
@@ -167,33 +188,31 @@ noBtn.addEventListener("touchstart", function(e){
 
 // YES button click
 yesBtn.addEventListener("click", function() {
-    // Fade in the new background smoothly
+    // Fade in overlay
     bgOverlay.style.opacity = 1;
 
-    // Show love message in top-left corner
+    // Move question to top center only after clicking YES
+    container.classList.add("top");
+
+    // Show love message sliding from left
     message.style.display = "block";
+    setTimeout(() => message.classList.add("visible"), 50);
 
     // Hide buttons
     yesBtn.style.display = "none";
     noBtn.style.display = "none";
 });
 
-// Create floating hearts
+// Floating hearts
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
     heart.innerHTML = "❤️";
-
-    // Responsive size for mobile
     heart.style.fontSize = Math.min(window.innerWidth / 15, Math.random() * 20 + 15) + "px";
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (Math.random() * 5 + 5) + "s";
-
     document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 8000);
+    setTimeout(() => heart.remove(), 8000);
 }
 
 setInterval(createHeart, 300);
@@ -201,4 +220,3 @@ setInterval(createHeart, 300);
 
 </body>
 </html>
-
