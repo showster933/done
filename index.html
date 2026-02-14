@@ -10,9 +10,15 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     overflow: hidden;
     text-align: center;
+
+    background-image: url("pic.jpeg");
+    background-size: auto 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: black;
+    transition: background-image 1.5s ease-in-out; /* smooth fade fallback */
 }
 
 .container {
@@ -83,11 +89,29 @@ button {
         opacity: 0;
     }
 }
+
+/* Overlay for fade effect */
+#bgOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('pic2.jpeg'); /* new image */
+    background-size: auto 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    z-index: 5;
+    pointer-events: none;
+}
 </style>
 </head>
 
 <body>
 
+<div id="bgOverlay"></div>
 <div class="container">
     <h1>Iniym adi ndaki povan thalparym ndo kunjaa? ❤️</h1>
     <button id="yesBtn">UND 🌝</button>
@@ -106,8 +130,9 @@ button {
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const message = document.getElementById("loveMessage");
+const bgOverlay = document.getElementById("bgOverlay");
 
-// Make NO button run away (works on mobile too)
+// Make NO button run away
 function moveButton() {
     const x = Math.random() * (window.innerWidth - 100);
     const y = Math.random() * (window.innerHeight - 50);
@@ -123,7 +148,13 @@ noBtn.addEventListener("touchstart", function(e){
 
 // YES button click
 yesBtn.addEventListener("click", function() {
+    // Fade in the new background
+    bgOverlay.style.opacity = 1;
+
+    // Show message
     message.style.display = "block";
+
+    // Hide buttons
     yesBtn.style.display = "none";
     noBtn.style.display = "none";
 });
