@@ -69,7 +69,11 @@ button {
     display: none;
     font-size: 22px;
     color: white;
-    margin-top: 20px;
+    margin-top: 0;
+    position: absolute;  
+    top: 20px;
+    left: 20px;
+    text-align: right;
     animation: fadeIn 1.5s ease-in-out forwards;
 }
 
@@ -112,6 +116,13 @@ button {
     transition: opacity 1.5s ease-in-out;
     z-index: 5;
     pointer-events: none;
+}
+
+/* Responsive font for mobile */
+@media (max-width: 600px) {
+    .message {
+        font-size: 18px;
+    }
 }
 </style>
 </head>
@@ -159,7 +170,7 @@ yesBtn.addEventListener("click", function() {
     // Fade in the new background smoothly
     bgOverlay.style.opacity = 1;
 
-    // Show love message
+    // Show love message in top-left corner
     message.style.display = "block";
 
     // Hide buttons
